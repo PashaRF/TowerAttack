@@ -23,7 +23,7 @@ namespace TowerAttack
         int bulletNum = 1;
         int monsterHealth = 100;
         int monsterSpeed = 1;
-        int coins = 100;
+        int coins = 1000;
         int towerCost = 25;
         int menuYSpacing = 8;
         int menuXSpacing = 16;
@@ -63,15 +63,17 @@ namespace TowerAttack
         SolidBrush greenBrush = new SolidBrush(Color.Green);
         SolidBrush blueBrush = new SolidBrush(Color.Blue);
         SolidBrush purpleBrush = new SolidBrush(Color.Purple);
+        SolidBrush testBrush = new SolidBrush(Color.FromArgb(255, 100, 0, 0));
         #endregion
         #region lists&Arrays
+        int[] numUpgrades = new int[5];
         bool[] towerSpaceBought = new bool[5];
         bool[] towerOpen = new bool[5];
         string[] towerType = new string[5];
         Rectangle[] towerSpace = new Rectangle[5];
         Rectangle[] towerMenu = new Rectangle[4];
         int[,] towerLevel = new int[5, 4] 
-        {
+        { 
             { 0, 0, 0, 0 },
             { 1, 0, 0, 0 },
             { 2, 0, 0, 0 },
@@ -179,21 +181,12 @@ namespace TowerAttack
                 }
                 else
                 {
-                    switch (towerType[i])
-                    {
-                        case "original":
-                            e.Graphics.FillRectangle(darkestGrayBrush, towerSpace[i]);
-                            break; 
-                        case "doubleShot":
-                            e.Graphics.FillRectangle(purpleBrush, towerSpace[i]);
-                            break;
-                        case "poison":
-                            e.Graphics.FillRectangle(greenBrush, towerSpace[i]);
-                            break;
-                        case "destroyer":
-                            e.Graphics.FillRectangle(redBrush, towerSpace[i]);
-                            break;
-                    }
+                    int weight1 = 50 + (60 * towerLevel[i, 1]);
+                    int weight2 = 50 + (60 * towerLevel[i, 2]);
+                    int weight3 = 50 + (60 * towerLevel[i, 3]);
+
+                    SolidBrush towerBrush = new SolidBrush(Color.FromArgb(255, weight1, weight2, weight3));
+                    e.Graphics.FillRectangle(towerBrush, towerSpace[i]);
                 }
             }
             // checks if the menu is open, and then displays it
@@ -210,9 +203,17 @@ namespace TowerAttack
                 e.Graphics.DrawString("II", DefaultFont, blackBrush, towerMenu[2].X, towerMenu[2].Y);
                 e.Graphics.DrawString("III", DefaultFont, blackBrush, towerMenu[3].X, towerMenu[3].Y);
 
-                e.Graphics.DrawString("25", DefaultFont, blackBrush, towerMenu[1].X + 5, towerMenu[1].Y + 8);
-                e.Graphics.DrawString("25", DefaultFont, blackBrush, towerMenu[2].X + 5, towerMenu[2].Y + 8);
-                e.Graphics.DrawString("25", DefaultFont, blackBrush, towerMenu[3].X + 5, towerMenu[3].Y + 8);
+                for (int i = 1; i < towerMenu.Count(); i++) {
+                    if (100 >= (25 * Math.Pow(2, towerLevel[currentOpen, i])) && numUpgrades[currentOpen] <= 3)
+                    {
+                        e.Graphics.DrawString($"{25 * Math.Pow(2, towerLevel[currentOpen, i])}",
+                            DefaultFont, blackBrush, towerMenu[i].X + 5, towerMenu[i].Y + 8);
+                    }
+                    else
+                    {
+                        e.Graphics.DrawString($"", DefaultFont, blackBrush, towerMenu[i].X + 5, towerMenu[i].Y + 8);
+                    }
+                }
             }
             e.Graphics.FillEllipse(greenBrush, monster);
             #endregion
@@ -236,25 +237,13 @@ namespace TowerAttack
                     towerSpace[towerChosen].Y - menuYSpacing -menuIconHeight, menuIconWidth, menuIconHeight);
             }
         }
-        private void PurchaseUpgrade(int upgradeChoice)
+        private void PurchaseUpgrade(int upgradeChoice, int price)
         {
+            numUpgrades[currentOpen]++;
             towerSpaceBought[currentOpen] = true;
             // tower is upgraded
-            switch (upgradeChoice)
-            {
-                case 1:
-                    coins = coins - 25;
+                    coins = coins - price;
                     towerLevel[currentOpen, upgradeChoice]++;
-                    break;
-                case 2:
-                    coins = coins - 25;
-                    towerLevel[currentOpen, upgradeChoice]++;
-                    break;
-                case 3:
-                    coins = coins - 25;
-                    towerLevel[currentOpen, upgradeChoice]++;
-                    break;
-            }
             // tower type is assigned 
             if (upgradeChoice == 1)
             {
@@ -287,9 +276,28 @@ namespace TowerAttack
                     for (int i = 1; i < towerMenu.Count(); i++)
                     {
                         if ((e.X > towerMenu[i].X) && (e.X < towerMenu[i].X + towerMenu[i].Width) &&
-                              (e.Y > towerMenu[i].Y) && (e.Y < towerMenu[i].Y + towerMenu[i].Height) && coins >= 25 && towerSpaceBought[currentOpen] == false)
+                              (e.Y > towerMenu[i].Y) && (e.Y < towerMenu[i].Y + towerMenu[i].Height))
                         {
-                            PurchaseUpgrade(i);
+                            int cost = Convert.ToInt16(25 * Math.Pow(2,towerLevel[currentOpen, i]));
+                            if (coins >= cost && numUpgrades[currentOpen] < 4 && cost <= 100)
+                            {
+                                switch(i) 
+                                {
+                                    case 1:
+                                        if (towerLevel[currentOpen, 2] != 0 && towerLevel[currentOpen, 3] != 0) { }
+                                        break;
+                                    case 2:
+                                        if (towerLevel[currentOpen, 1] != 0 && towerLevel[currentOpen, 3] != 0) { }
+                                            break;
+                                    case 3:
+                                        if (towerLevel[currentOpen, 1] != 0 && towerLevel[currentOpen, 2] != 0) { }
+                                            break; 
+                                    default: 
+                                        PurchaseUpgrade(i, cost);
+                                        break;
+                                }
+
+                            }
                         }
                     }
                     if ((e.X > towerMenu[0].X) && (e.X < towerMenu[0].X + towerMenu[0].Width) &&
@@ -369,7 +377,6 @@ namespace TowerAttack
         }
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            this.Focus();
             if (monsterDead == false)
              {
                 switch (e.KeyCode)
