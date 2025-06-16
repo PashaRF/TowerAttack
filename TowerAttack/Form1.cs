@@ -369,6 +369,7 @@ namespace TowerAttack
         }
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
+            this.Focus();
             if (monsterDead == false)
              {
                 switch (e.KeyCode)
