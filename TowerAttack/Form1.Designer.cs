@@ -42,20 +42,24 @@
             // coinsLabel
             // 
             this.coinsLabel.AutoSize = true;
-            this.coinsLabel.Location = new System.Drawing.Point(413, 32);
+            this.coinsLabel.BackColor = System.Drawing.Color.SkyBlue;
+            this.coinsLabel.Font = new System.Drawing.Font("OCR A Extended", 12.8F);
+            this.coinsLabel.Location = new System.Drawing.Point(2, 69);
             this.coinsLabel.Name = "coinsLabel";
-            this.coinsLabel.Size = new System.Drawing.Size(66, 16);
+            this.coinsLabel.Size = new System.Drawing.Size(127, 24);
             this.coinsLabel.TabIndex = 0;
-            this.coinsLabel.Text = "coins: 100";
+            this.coinsLabel.Text = "coins:100";
             // 
             // waveLabel
             // 
             this.waveLabel.AutoSize = true;
-            this.waveLabel.Location = new System.Drawing.Point(37, 38);
+            this.waveLabel.BackColor = System.Drawing.Color.SkyBlue;
+            this.waveLabel.Font = new System.Drawing.Font("OCR A Extended", 12.8F);
+            this.waveLabel.Location = new System.Drawing.Point(12, 33);
             this.waveLabel.Name = "waveLabel";
-            this.waveLabel.Size = new System.Drawing.Size(49, 16);
+            this.waveLabel.Size = new System.Drawing.Size(101, 24);
             this.waveLabel.TabIndex = 1;
-            this.waveLabel.Text = "wave 1";
+            this.waveLabel.Text = "wave: 1";
             // 
             // gameTimer
             // 
@@ -113,10 +117,10 @@
             // 
             // newWaveButton
             // 
-            this.newWaveButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.newWaveButton.BackColor = System.Drawing.Color.SkyBlue;
             this.newWaveButton.Font = new System.Drawing.Font("OCR A Extended", 16.8F, System.Drawing.FontStyle.Bold);
             this.newWaveButton.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.newWaveButton.Location = new System.Drawing.Point(160, 28);
+            this.newWaveButton.Location = new System.Drawing.Point(236, 56);
             this.newWaveButton.Name = "newWaveButton";
             this.newWaveButton.Size = new System.Drawing.Size(197, 37);
             this.newWaveButton.TabIndex = 6;
@@ -128,6 +132,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.DarkCyan;
             this.ClientSize = new System.Drawing.Size(500, 600);
             this.Controls.Add(this.newWaveButton);
             this.Controls.Add(this.closeMenuLabel);
@@ -137,6 +142,7 @@
             this.Controls.Add(this.waveLabel);
             this.Controls.Add(this.coinsLabel);
             this.DoubleBuffered = true;
+            this.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Form1";
             this.Text = "Form1";

@@ -23,7 +23,7 @@ namespace TowerAttack
         int bulletNum = 1;
         int monsterHealth = 100;
         int monsterSpeed = 1;
-        int coins = 1000;
+        int coins = 100;
         int towerCost = 25;
         int menuYSpacing = 8;
         int menuXSpacing = 16;
@@ -37,6 +37,7 @@ namespace TowerAttack
         int mouseY;
         int targetX;
         int targetY;
+        int healthBarSize = 45;
 
         bool upArrowDown;
         bool downArrowDown;
@@ -46,9 +47,10 @@ namespace TowerAttack
         bool monsterDead = true;
         bool shootBullets = true;
 
-        Rectangle monster = new Rectangle(1000, 20, 35, 35);
-        Rectangle monsterEye1 = new Rectangle(1005, 35, 8, 8);
-        Rectangle monsterEye2 = new Rectangle(990, 35, 8, 8);
+        Rectangle monster = new Rectangle(1175, 20, 35, 35);
+        Rectangle monsterEye1 = new Rectangle(1180, 35, 8, 8);
+        Rectangle monsterEye2 = new Rectangle(1200, 35, 8, 8);
+        Rectangle monsterHealthBar = new Rectangle(1170, 15, 0, 5);
         #endregion
         #region brushColours
         SolidBrush whiteBrush = new SolidBrush(Color.White);
@@ -71,9 +73,10 @@ namespace TowerAttack
         bool[] towerOpen = new bool[5];
         string[] towerType = new string[5];
         Rectangle[] towerSpace = new Rectangle[5];
+        Rectangle[] backTowerSpace = new Rectangle[5];
         Rectangle[] towerMenu = new Rectangle[4];
-        int[,] towerLevel = new int[5, 4] 
-        { 
+        int[,] towerLevel = new int[5, 4]
+        {
             { 0, 0, 0, 0 },
             { 1, 0, 0, 0 },
             { 2, 0, 0, 0 },
@@ -84,7 +87,7 @@ namespace TowerAttack
         List<float> bulletXSpeedList = new List<float>();
         List<float> bulletYSpeedList = new List<float>();
 
-        Rectangle[] monsterParts = new Rectangle[3];
+        Rectangle[] monsterParts = new Rectangle[4];
         #endregion
         Random randGen = new Random();
         public Form1()
@@ -103,9 +106,16 @@ namespace TowerAttack
             towerSpace[3] = new Rectangle(100, 395, 65, 65);
             towerSpace[4] = new Rectangle(205, 395, 65, 65);
 
+            backTowerSpace[0] = new Rectangle(45, 285, 75, 75);
+            backTowerSpace[1] = new Rectangle(150, 285, 75, 75);
+            backTowerSpace[2] = new Rectangle(255, 285, 75, 75);
+            backTowerSpace[3] = new Rectangle(95, 390, 75, 75);
+            backTowerSpace[4] = new Rectangle(200, 390, 75, 75);
+
             monsterParts[0] = monster;
             monsterParts[1] = monsterEye1;
             monsterParts[2] = monsterEye2;
+            monsterParts[3] = monsterHealthBar;
             #endregion
             for (int i = 0; i < towerSpaceBought.Count(); i++)
             {
@@ -120,47 +130,73 @@ namespace TowerAttack
                 CreateBullet();
                 timer = 0;
             }
-                for (int i = 0; i < bulletList.Count; i++)
-                {
-                    float y;
-                    float x;
-                    y = bulletList[i].Y - bulletYSpeedList[i];
-                    x = bulletList[i].X - bulletXSpeedList[i];
-                    bulletList[i] = new Rectangle((int)x, (int)y, bulletList[i].Width, bulletList[i].Height);
-                    if (bulletList[i].Y > this.Height + 50)
-                    {
-                    DestroyBullet(i);
-                    }
-                }
-            if (downArrowDown == true  && monster.Y <= this.Height - monster.Height)
-            {
-                monster.Y = monster.Y + monsterSpeed;
-            }
-            if (upArrowDown == true && monster.Y >= 0)
-            {
-                monster.Y = monster.Y - monsterSpeed;
-            }
-            if (leftArrowDown == true && monster.X >= 0)
-            {
-                monster.X = monster.X - monsterSpeed;
-            }
-            if (rightArrowDown == true && monster.X <= this.Width - monster.Width)
-            {
-                monster.X = monster.X + monsterSpeed;
-            }
+
             for (int i = 0; i < bulletList.Count; i++)
             {
-                if (monster.IntersectsWith(bulletList[i]))
+                float y;
+                float x;
+                y = bulletList[i].Y - bulletYSpeedList[i];
+                x = bulletList[i].X - bulletXSpeedList[i];
+                bulletList[i] = new Rectangle((int)x, (int)y, bulletList[i].Width, bulletList[i].Height);
+                if (bulletList[i].Y > this.Height + 50)
                 {
-                    DestroyBullet (i);
+                    DestroyBullet(i);
+                }
+            }
+
+            if (downArrowDown == true && monsterParts[0].Y <= this.Height - monsterParts[0].Height)
+            {
+                for (int i = 0; i < monsterParts.Count(); i++)
+                {
+                    monsterParts[i].Y = monsterParts[i].Y + monsterSpeed;
+                }
+            }
+
+            if (upArrowDown == true && monsterParts[0].Y >= 0)
+            {
+                for (int i = 0; i < monsterParts.Count(); i++)
+                {
+                    monsterParts[i].Y = monsterParts[i].Y - monsterSpeed;
+                }
+            }
+
+            if (leftArrowDown == true && monsterParts[0].X >= 0)
+            {
+                for (int i = 0; i < monsterParts.Count(); i++)
+                {
+                    monsterParts[i].X = monsterParts[i].X - monsterSpeed;
+                }
+            }
+
+            if (rightArrowDown == true && monsterParts[0].X <= this.Width - monsterParts[0].Width)
+            {
+                for (int i = 0; i < monsterParts.Count(); i++)
+                {
+                    monsterParts[i].X = monsterParts[i].X + monsterSpeed;
+                }
+            }
+
+            for (int i = 0; i < bulletList.Count; i++)
+            {
+                if (monsterParts[0].IntersectsWith(bulletList[i]))
+                {
+                    DestroyBullet(i);
                     monsterHealth = monsterHealth - 5;
-                    coins = coins + 5;
+                    coins = coins + 1;
+                    if (wave != 0) 
+                    { 
+                        monsterParts[3] = new Rectangle(monsterParts[3].X, monsterParts[3].Y,
+                        Convert.ToInt16((healthBarSize * monsterHealth) / (healthBarSize * 3 * wave)), monsterParts[3].Height);
+                    }
                     coinsLabel.Text = $"coins: {coins}";
                     if (monsterHealth <= 0)
                     {
                         coins = coins + 100 * wave;
                         coinsLabel.Text = $"coins: {coins}";
-                        monster.Location = new Point(1000, 20);
+                        for (int j = 0; j < monsterParts.Count(); j++)
+                        {
+                            monsterParts[j].X = monsterParts[j].X + 1000;
+                        }
                         monsterDead = true;
                         shootBullets = false;
                         newWaveButton.Show();
@@ -175,6 +211,7 @@ namespace TowerAttack
             // checks if each tower space is bought, and then paints it according to type
             for (int i = 0; i < towerSpace.Count(); i++)
             {
+                e.Graphics.FillRectangle(darkestGrayBrush, backTowerSpace[i]);
                 if (towerSpaceBought[i] == false)
                 {
                     e.Graphics.FillRectangle(lightGrayBrush, towerSpace[i]);
@@ -203,7 +240,8 @@ namespace TowerAttack
                 e.Graphics.DrawString("II", DefaultFont, blackBrush, towerMenu[2].X, towerMenu[2].Y);
                 e.Graphics.DrawString("III", DefaultFont, blackBrush, towerMenu[3].X, towerMenu[3].Y);
 
-                for (int i = 1; i < towerMenu.Count(); i++) {
+                for (int i = 1; i < towerMenu.Count(); i++)
+                {
                     if (100 >= (25 * Math.Pow(2, towerLevel[currentOpen, i])) && numUpgrades[currentOpen] <= 3)
                     {
                         e.Graphics.DrawString($"{25 * Math.Pow(2, towerLevel[currentOpen, i])}",
@@ -215,10 +253,14 @@ namespace TowerAttack
                     }
                 }
             }
-            e.Graphics.FillEllipse(greenBrush, monster);
+            e.Graphics.FillEllipse(greenBrush, monsterParts[0]);
+            e.Graphics.FillRectangle(blackBrush, monsterParts[1]);
+            e.Graphics.FillRectangle(blackBrush, monsterParts[2]);
+            e.Graphics.FillRectangle(redBrush, monsterParts[3]);
             #endregion
             #region dynamic
-            for (int i = 0; i < bulletList.Count; i++) {
+            for (int i = 0; i < bulletList.Count; i++)
+            {
                 e.Graphics.FillEllipse(darkestGrayBrush, bulletList[i]);
             }
             #endregion
@@ -233,8 +275,8 @@ namespace TowerAttack
             {
                 int a = i * 2;
                 int b = a - 3;
-                towerMenu[i] = new Rectangle(towerSpace[towerChosen].X + (towerSpace[towerChosen].Width /2 ) + (menuXSpacing * b) - (menuIconWidth / 2), 
-                    towerSpace[towerChosen].Y - menuYSpacing -menuIconHeight, menuIconWidth, menuIconHeight);
+                towerMenu[i] = new Rectangle(towerSpace[towerChosen].X + (towerSpace[towerChosen].Width / 2) + (menuXSpacing * b) - (menuIconWidth / 2),
+                    towerSpace[towerChosen].Y - menuYSpacing - menuIconHeight, menuIconWidth, menuIconHeight);
             }
         }
         private void PurchaseUpgrade(int upgradeChoice, int price)
@@ -242,8 +284,8 @@ namespace TowerAttack
             numUpgrades[currentOpen]++;
             towerSpaceBought[currentOpen] = true;
             // tower is upgraded
-                    coins = coins - price;
-                    towerLevel[currentOpen, upgradeChoice]++;
+            coins = coins - price;
+            towerLevel[currentOpen, upgradeChoice]++;
             // tower type is assigned 
             if (upgradeChoice == 1)
             {
@@ -253,7 +295,7 @@ namespace TowerAttack
             {
                 towerType[currentOpen] = "poison";
             }
-            else 
+            else
             {
                 towerType[currentOpen] = "destroyer";
             }
@@ -278,22 +320,34 @@ namespace TowerAttack
                         if ((e.X > towerMenu[i].X) && (e.X < towerMenu[i].X + towerMenu[i].Width) &&
                               (e.Y > towerMenu[i].Y) && (e.Y < towerMenu[i].Y + towerMenu[i].Height))
                         {
-                            int cost = Convert.ToInt16(25 * Math.Pow(2,towerLevel[currentOpen, i]));
+                            int cost = Convert.ToInt16(25 * Math.Pow(2, towerLevel[currentOpen, i]));
                             if (coins >= cost && numUpgrades[currentOpen] < 4 && cost <= 100)
                             {
-                                switch(i) 
+                                switch (i)
                                 {
                                     case 1:
                                         if (towerLevel[currentOpen, 2] != 0 && towerLevel[currentOpen, 3] != 0) { }
+                                        else
+                                        {
+                                            PurchaseUpgrade(i, cost);
+                                        }
                                         break;
                                     case 2:
                                         if (towerLevel[currentOpen, 1] != 0 && towerLevel[currentOpen, 3] != 0) { }
-                                            break;
+                                        else
+                                        {
+                                            PurchaseUpgrade(i, cost);
+
+                                        }
+                                        break;
                                     case 3:
-                                        if (towerLevel[currentOpen, 1] != 0 && towerLevel[currentOpen, 2] != 0) { }
-                                            break; 
-                                    default: 
-                                        PurchaseUpgrade(i, cost);
+                                        if (towerLevel[currentOpen, 1] != 0 && towerLevel[currentOpen, 2] != 0) 
+                                        { 
+                                        }
+                                        else
+                                        {
+                                            PurchaseUpgrade(i, cost);
+                                        }
                                         break;
                                 }
 
@@ -305,7 +359,6 @@ namespace TowerAttack
                     {
                         menuOpen = false;
                         towerOpen[currentOpen] = false;
-                       // towerMenu[currentOpen] = new Rectangle(0,0,menuIconWidth, menuIconHeight);
                     }
                 }
             }
@@ -348,14 +401,14 @@ namespace TowerAttack
         }
         private void Form1_MouseMove(object sender, MouseEventArgs e)
         {
-            mouseX =e.X;
-            mouseY= e.Y;
+            mouseX = e.X;
+            mouseY = e.Y;
             // waveLabel.Text = $"x {e.X} yo and y {e.Y}";
         }
         private void Form1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if (targetSet == false) 
-            { 
+            if (targetSet == false)
+            {
                 targetSet = true;
                 targetX = e.X;
                 targetY = e.Y;
@@ -378,7 +431,7 @@ namespace TowerAttack
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
             if (monsterDead == false)
-             {
+            {
                 switch (e.KeyCode)
                 {
                     case Keys.W:
@@ -404,7 +457,7 @@ namespace TowerAttack
                 else
                 {
                     shootBullets = false;
-                } 
+                }
             }
         }
         private void Form1_KeyUp(object sender, KeyEventArgs e)
@@ -430,13 +483,21 @@ namespace TowerAttack
             wave++;
             waveLabel.Text = $"wave: {wave}";
             monsterDead = false;
-            monster.X = 175;
+            for (int i = 0; i < 4; i++)
+            {
+                monsterParts[i].X = monsterParts[i].X - 1000;
+            }
+            monsterParts[0].Y = 20;
+            monsterParts[1].Y = 35;
+            monsterParts[2].Y = 35;
+            monsterParts[3].Y = 12;
             shootBullets = true;
             newWaveButton.Hide();
             monsterHealth = 150 * wave;
+            this.Focus();
         }
         #region oops! 
-        private void Form1_Click(object sender, EventArgs e){}
+        private void Form1_Click(object sender, EventArgs e) { }
         #endregion
     }
 }
