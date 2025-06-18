@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -17,13 +18,11 @@ namespace TowerAttack
         int wave = 0;
         int timer = 0;
         int reloadSpeed = 9;
-        int bulletSize = 10;
         int bulletDamage = 4;
-        int bulletSpeed = 10;
         int bulletNum = 1;
         int monsterHealth = 100;
         int monsterSpeed = 1;
-        int coins = 100;
+        int coins = 25;
         int towerCost = 25;
         int menuYSpacing = 8;
         int menuXSpacing = 16;
@@ -86,6 +85,8 @@ namespace TowerAttack
         List<Rectangle> bulletList = new List<Rectangle>();
         List<float> bulletXSpeedList = new List<float>();
         List<float> bulletYSpeedList = new List<float>();
+        List<int> bulletDamageList = new List<int>();
+        List <int> bulletSizeList = new List<int>();
 
         Rectangle[] monsterParts = new Rectangle[4];
         #endregion
@@ -94,10 +95,7 @@ namespace TowerAttack
         {
             InitializeComponent();
             #region setup
-            closeMenuLabel.Hide();
-            upgradeLabel1.Hide();
-            upgradeLabel2.Hide();
-            upgradeLabel3.Hide();
+            gameOverLabel.Hide();
             coinsLabel.Text = $"coins: {coins}";
             waveLabel.Text = $"wave: {wave}";
             towerSpace[0] = new Rectangle(50, 290, 65, 65);
@@ -181,7 +179,7 @@ namespace TowerAttack
                 if (monsterParts[0].IntersectsWith(bulletList[i]))
                 {
                     DestroyBullet(i);
-                    monsterHealth = monsterHealth - 5;
+                    monsterHealth = monsterHealth - bulletDamageList[i];
                     coins = coins + 1;
                     if (wave != 0) 
                     { 
@@ -191,17 +189,26 @@ namespace TowerAttack
                     coinsLabel.Text = $"coins: {coins}";
                     if (monsterHealth <= 0)
                     {
-                        coins = coins + 100 * wave;
+                        coins = coins + 25 * wave;
                         coinsLabel.Text = $"coins: {coins}";
-                        for (int j = 0; j < monsterParts.Count(); j++)
-                        {
-                            monsterParts[j].X = monsterParts[j].X + 1000;
-                        }
+
+                        monsterParts[0].X = 1175;
+                        monsterParts[1].X = 1180;
+                        monsterParts[2].X = 1200;
+                        monsterParts[3].X = 1170;
+
                         monsterDead = true;
                         shootBullets = false;
                         newWaveButton.Show();
                     }
                 }
+            }
+            if (monsterParts[0].Y == this.Height - monsterParts[0].Height)
+            {
+                gameTimer.Stop();
+                gameOverLabel.Show();
+                SoundPlayer gameOverSound = new SoundPlayer(Properties.Resources.gameOverSound);
+                gameOverSound.Play();
             }
             Refresh();
         }
@@ -244,8 +251,33 @@ namespace TowerAttack
                 {
                     if (100 >= (25 * Math.Pow(2, towerLevel[currentOpen, i])) && numUpgrades[currentOpen] <= 3)
                     {
-                        e.Graphics.DrawString($"{25 * Math.Pow(2, towerLevel[currentOpen, i])}",
-                            DefaultFont, blackBrush, towerMenu[i].X + 5, towerMenu[i].Y + 8);
+                        switch (i)
+                        {
+                            case 1:
+                                if (towerLevel[currentOpen, 2] != 0 && towerLevel[currentOpen, 3] != 0) { }
+                                else
+                                {
+                                    e.Graphics.DrawString($"{25 * Math.Pow(2, towerLevel[currentOpen, i])}",
+                                    DefaultFont, blackBrush, towerMenu[i].X + 5, towerMenu[i].Y + 8);
+                                }
+                                break;
+                            case 2:
+                                if (towerLevel[currentOpen, 1] != 0 && towerLevel[currentOpen, 3] != 0) { }
+                                else
+                                {
+                                    e.Graphics.DrawString($"{25 * Math.Pow(2, towerLevel[currentOpen, i])}",
+                                    DefaultFont, blackBrush, towerMenu[i].X + 5, towerMenu[i].Y + 8);
+                                }
+                                break;
+                            case 3:
+                                if (towerLevel[currentOpen, 1] != 0 && towerLevel[currentOpen, 2] != 0) { }
+                                else
+                                {
+                                    e.Graphics.DrawString($"{25 * Math.Pow(2, towerLevel[currentOpen, i])}",
+                                    DefaultFont, blackBrush, towerMenu[i].X + 5, towerMenu[i].Y + 8);
+                                }
+                                break;
+                        }
                     }
                     else
                     {
@@ -286,19 +318,8 @@ namespace TowerAttack
             // tower is upgraded
             coins = coins - price;
             towerLevel[currentOpen, upgradeChoice]++;
-            // tower type is assigned 
-            if (upgradeChoice == 1)
-            {
-                towerType[currentOpen] = "doubleShot";
-            }
-            else if (upgradeChoice == 2)
-            {
-                towerType[currentOpen] = "poison";
-            }
-            else
-            {
-                towerType[currentOpen] = "destroyer";
-            }
+            SoundPlayer upgradeSound = new SoundPlayer(Properties.Resources.upgradeSound);
+            upgradeSound.Play();
         }
         private void Form1_MouseDown(object sender, MouseEventArgs e)
         {
@@ -322,7 +343,7 @@ namespace TowerAttack
                         {
                             int cost = Convert.ToInt16(25 * Math.Pow(2, towerLevel[currentOpen, i]));
                             if (coins >= cost && numUpgrades[currentOpen] < 4 && cost <= 100)
-                            {
+                            { 
                                 switch (i)
                                 {
                                     case 1:
@@ -369,13 +390,20 @@ namespace TowerAttack
             {
                 for (int i = 0; i < towerSpaceBought.Count(); i++)
                 {
+
                     int variation = randGen.Next(0, 8);
                     variation = variation - 4;
                     if (towerSpaceBought[i] == true)
                     {
+                        int bulletDamage = (5 + (1 * towerLevel[i, 2]));
+                        int bulletSpeed = (10 + (3 * (towerLevel[i, 1])));
+                        int bulletSize = (10 + (3 * (towerLevel[i, 3])));
+                        bulletSizeList.Add(bulletSize);
                         Rectangle newBullet = new Rectangle(towerSpace[i].X + (towerSpace[i].Width / 2) - (bulletSize / 2) + variation,
-                            towerSpace[i].Y, bulletSize, bulletSize);
+                        towerSpace[i].Y, bulletSize, bulletSize);
                         bulletList.Add(newBullet);
+                        bulletDamageList.Add(bulletDamage);
+                        bulletSizeList.Add(bulletSize);
                         int xPos;
                         int yPos;
                         if (targetSet == false)
@@ -388,7 +416,7 @@ namespace TowerAttack
                             xPos = targetX;
                             yPos = targetY;
                         }
-                        FindBulletVelocity(newBullet, xPos, yPos);
+                        FindBulletVelocity(newBullet, xPos, yPos, bulletSpeed);
                     }
                 }
             }
@@ -418,10 +446,10 @@ namespace TowerAttack
                 targetSet = false;
             }
         }
-        private void FindBulletVelocity(Rectangle newBullet, int xPlace, int yPlace)
+        private void FindBulletVelocity(Rectangle newBullet, int xPlace, int yPlace, int projectileSpeed)
         {
-            float testTopX = Convert.ToSingle(bulletSpeed * (newBullet.X - xPlace));
-            float testTopY = Convert.ToSingle(bulletSpeed * (newBullet.Y - yPlace));
+            float testTopX = Convert.ToSingle(projectileSpeed * (newBullet.X - xPlace));
+            float testTopY = Convert.ToSingle(projectileSpeed * (newBullet.Y - yPlace));
             float testBottom = Convert.ToSingle(Math.Sqrt(Math.Pow(yPlace - newBullet.Y, 2) + Math.Pow(xPlace - newBullet.X, 2)));
             float bulletXSpeed = testTopX / testBottom;
             float bulletYSpeed = testTopY / testBottom;
@@ -432,7 +460,13 @@ namespace TowerAttack
         {
             if (monsterDead == false)
             {
-                switch (e.KeyCode)
+                int soundChance = randGen.Next(0, 100);
+                if (soundChance == 21)
+                {
+                    SoundPlayer monsterSound = new SoundPlayer(Properties.Resources.monsterSound);
+                    monsterSound.Play();
+                }
+                    switch (e.KeyCode)
                 {
                     case Keys.W:
                         upArrowDown = true;
@@ -495,6 +529,8 @@ namespace TowerAttack
             newWaveButton.Hide();
             monsterHealth = 150 * wave;
             this.Focus();
+            SoundPlayer startSound = new SoundPlayer(Properties.Resources.startSound);
+            startSound.Play();
         }
         #region oops! 
         private void Form1_Click(object sender, EventArgs e) { }

@@ -29,13 +29,11 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.coinsLabel = new System.Windows.Forms.Label();
             this.waveLabel = new System.Windows.Forms.Label();
             this.gameTimer = new System.Windows.Forms.Timer(this.components);
-            this.upgradeLabel3 = new System.Windows.Forms.Label();
-            this.upgradeLabel2 = new System.Windows.Forms.Label();
-            this.upgradeLabel1 = new System.Windows.Forms.Label();
-            this.closeMenuLabel = new System.Windows.Forms.Label();
+            this.gameOverLabel = new System.Windows.Forms.Label();
             this.newWaveButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -67,53 +65,17 @@
             this.gameTimer.Interval = 20;
             this.gameTimer.Tick += new System.EventHandler(this.gameTimer_Tick);
             // 
-            // upgradeLabel3
+            // gameOverLabel
             // 
-            this.upgradeLabel3.AutoSize = true;
-            this.upgradeLabel3.BackColor = System.Drawing.Color.Transparent;
-            this.upgradeLabel3.Font = new System.Drawing.Font("Ebrima", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.upgradeLabel3.Location = new System.Drawing.Point(393, 185);
-            this.upgradeLabel3.Name = "upgradeLabel3";
-            this.upgradeLabel3.Size = new System.Drawing.Size(25, 23);
-            this.upgradeLabel3.TabIndex = 2;
-            this.upgradeLabel3.Text = "III";
-            this.upgradeLabel3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // upgradeLabel2
-            // 
-            this.upgradeLabel2.AutoSize = true;
-            this.upgradeLabel2.BackColor = System.Drawing.Color.Transparent;
-            this.upgradeLabel2.Font = new System.Drawing.Font("Ebrima", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.upgradeLabel2.Location = new System.Drawing.Point(241, 291);
-            this.upgradeLabel2.Name = "upgradeLabel2";
-            this.upgradeLabel2.Size = new System.Drawing.Size(20, 23);
-            this.upgradeLabel2.TabIndex = 3;
-            this.upgradeLabel2.Text = "II";
-            this.upgradeLabel2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // upgradeLabel1
-            // 
-            this.upgradeLabel1.AutoSize = true;
-            this.upgradeLabel1.BackColor = System.Drawing.Color.Transparent;
-            this.upgradeLabel1.Font = new System.Drawing.Font("Ebrima", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.upgradeLabel1.Location = new System.Drawing.Point(325, 315);
-            this.upgradeLabel1.Name = "upgradeLabel1";
-            this.upgradeLabel1.Size = new System.Drawing.Size(15, 23);
-            this.upgradeLabel1.TabIndex = 4;
-            this.upgradeLabel1.Text = "I";
-            this.upgradeLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // closeMenuLabel
-            // 
-            this.closeMenuLabel.AutoSize = true;
-            this.closeMenuLabel.BackColor = System.Drawing.Color.Transparent;
-            this.closeMenuLabel.Font = new System.Drawing.Font("Ebrima", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.closeMenuLabel.Location = new System.Drawing.Point(243, 325);
-            this.closeMenuLabel.Name = "closeMenuLabel";
-            this.closeMenuLabel.Size = new System.Drawing.Size(21, 23);
-            this.closeMenuLabel.TabIndex = 5;
-            this.closeMenuLabel.Text = "X";
-            this.closeMenuLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.gameOverLabel.AutoSize = true;
+            this.gameOverLabel.BackColor = System.Drawing.Color.SkyBlue;
+            this.gameOverLabel.Font = new System.Drawing.Font("Ebrima", 45.2F, System.Drawing.FontStyle.Bold);
+            this.gameOverLabel.Location = new System.Drawing.Point(1, 168);
+            this.gameOverLabel.Name = "gameOverLabel";
+            this.gameOverLabel.Size = new System.Drawing.Size(483, 101);
+            this.gameOverLabel.TabIndex = 5;
+            this.gameOverLabel.Text = "GAME OVER";
+            this.gameOverLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // newWaveButton
             // 
@@ -135,15 +97,13 @@
             this.BackColor = System.Drawing.Color.DarkCyan;
             this.ClientSize = new System.Drawing.Size(500, 600);
             this.Controls.Add(this.newWaveButton);
-            this.Controls.Add(this.closeMenuLabel);
-            this.Controls.Add(this.upgradeLabel1);
-            this.Controls.Add(this.upgradeLabel2);
-            this.Controls.Add(this.upgradeLabel3);
+            this.Controls.Add(this.gameOverLabel);
             this.Controls.Add(this.waveLabel);
             this.Controls.Add(this.coinsLabel);
             this.DoubleBuffered = true;
             this.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "Form1";
             this.Click += new System.EventHandler(this.Form1_Click);
@@ -163,10 +123,7 @@
         private System.Windows.Forms.Label coinsLabel;
         private System.Windows.Forms.Label waveLabel;
         private System.Windows.Forms.Timer gameTimer;
-        private System.Windows.Forms.Label upgradeLabel3;
-        private System.Windows.Forms.Label upgradeLabel2;
-        private System.Windows.Forms.Label upgradeLabel1;
-        private System.Windows.Forms.Label closeMenuLabel;
+        private System.Windows.Forms.Label gameOverLabel;
         private System.Windows.Forms.Button newWaveButton;
     }
 }

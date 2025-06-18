@@ -65,6 +65,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -78,6 +79,24 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\startSound" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\upgradeSound" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\game-character-140506.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\game-start-6104 %281%29.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\money-pickup-2-89563.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\game-over-39-199830.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
