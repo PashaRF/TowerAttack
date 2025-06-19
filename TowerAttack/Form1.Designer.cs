@@ -35,6 +35,7 @@
             this.gameTimer = new System.Windows.Forms.Timer(this.components);
             this.gameOverLabel = new System.Windows.Forms.Label();
             this.newWaveButton = new System.Windows.Forms.Button();
+            this.instructionsLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // coinsLabel
@@ -90,12 +91,24 @@
             this.newWaveButton.UseVisualStyleBackColor = false;
             this.newWaveButton.Click += new System.EventHandler(this.newWaveButton_Click);
             // 
+            // instructionsLabel
+            // 
+            this.instructionsLabel.BackColor = System.Drawing.Color.SkyBlue;
+            this.instructionsLabel.Font = new System.Drawing.Font("Ebrima", 8.8F, System.Drawing.FontStyle.Bold);
+            this.instructionsLabel.Location = new System.Drawing.Point(12, 121);
+            this.instructionsLabel.Name = "instructionsLabel";
+            this.instructionsLabel.Size = new System.Drawing.Size(480, 196);
+            this.instructionsLabel.TabIndex = 7;
+            this.instructionsLabel.Text = resources.GetString("instructionsLabel.Text");
+            this.instructionsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DarkCyan;
             this.ClientSize = new System.Drawing.Size(500, 600);
+            this.Controls.Add(this.instructionsLabel);
             this.Controls.Add(this.newWaveButton);
             this.Controls.Add(this.gameOverLabel);
             this.Controls.Add(this.waveLabel);
@@ -106,7 +119,6 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "Form1";
-            this.Click += new System.EventHandler(this.Form1_Click);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
@@ -125,6 +137,7 @@
         private System.Windows.Forms.Timer gameTimer;
         private System.Windows.Forms.Label gameOverLabel;
         private System.Windows.Forms.Button newWaveButton;
+        private System.Windows.Forms.Label instructionsLabel;
     }
 }
 
