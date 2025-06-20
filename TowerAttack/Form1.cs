@@ -189,8 +189,8 @@ namespace TowerAttack
             {
                 if (monsterParts[0].IntersectsWith(bulletList[i]))
                 {
-                    DestroyBullet(i);
                     DamageMonster(i);
+                    DestroyBullet(i);
                 }
             }
 
