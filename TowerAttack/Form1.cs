@@ -189,6 +189,7 @@ namespace TowerAttack
             // stops game if monster wins
             if (monsterParts[0].Y == this.Height - monsterParts[0].Height)
             {
+                newWaveButton.Hide();
                 gameTimer.Stop();
                 gameOverLabel.Show();
                 SoundPlayer gameOverSound = new SoundPlayer(Properties.Resources.gameOverSound);
