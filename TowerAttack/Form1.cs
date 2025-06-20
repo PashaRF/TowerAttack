@@ -66,19 +66,11 @@ namespace TowerAttack
         Rectangle monsterHealthBar = new Rectangle(1170, 15, 0, 5);
         #endregion
         #region brushColours
-      //  SolidBrush whiteBrush = new SolidBrush(Color.White);
         SolidBrush blackBrush = new SolidBrush(Color.Black);
         SolidBrush lightGrayBrush = new SolidBrush(Color.FromArgb(255, 140, 140, 140));
-      //  SolidBrush mediumGrayBrush = new SolidBrush(Color.FromArgb(255, 110, 110, 110));
-      //  SolidBrush darkGrayBrush = new SolidBrush(Color.FromArgb(255, 80, 80, 80));
         SolidBrush darkestGrayBrush = new SolidBrush(Color.FromArgb(255, 50, 50, 50));
         SolidBrush redBrush = new SolidBrush(Color.Red);
-      //  SolidBrush orangeBrush = new SolidBrush(Color.Orange);
-      //  SolidBrush yellowBrush = new SolidBrush(Color.Yellow);
         SolidBrush greenBrush = new SolidBrush(Color.Green);
-      //  SolidBrush blueBrush = new SolidBrush(Color.Blue);
-      //  SolidBrush purpleBrush = new SolidBrush(Color.Purple);
-      //  SolidBrush monsterBrush = new SolidBrush(Color.FromArgb(255, 100, 0, 0));
         #endregion
         #region lists&Arrays
         Rectangle[] towerSpace = new Rectangle[5];
